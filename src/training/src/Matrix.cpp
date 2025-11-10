@@ -164,7 +164,6 @@ void Matrix::xavierInit()
 void Matrix::heInit()
 {
     const double fanIn = rows;
-    const double fanOut = cols;
 
     const double stdDeviation = std::sqrt(2 / fanIn);
 
@@ -174,6 +173,18 @@ void Matrix::heInit()
     {
         elem = distribution(eng);
     });
+}
+
+double Matrix::sum() const
+{
+    return std::accumulate(data.begin(), data.end(), 0.0);
+}
+
+double Matrix::mean() const
+{
+    if (data.empty())
+        return 0.0;
+    return sum()/static_cast<double>(data.size());
 }
 
 
