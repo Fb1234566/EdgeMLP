@@ -218,6 +218,13 @@ Matrix Matrix::map(const std::function<double(double)>& func) const
     return result;
 }
 
+void Matrix::applyFunction(const std::function<double(double)>& func)
+{
+    std::transform(data.begin(), data.end(), data.begin(), func);
+
+}
+
+
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix)
 {
     os << "Matrix [" << matrix.getRows() << "x" << matrix.getCols() << "]:\n";
