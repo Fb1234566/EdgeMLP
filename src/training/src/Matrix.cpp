@@ -1,6 +1,8 @@
 #include "Matrix.h"
 
 #include <stdexcept>
+#include <algorithm>
+#include <random>
 
 Matrix::Matrix(const int rows, const int cols) : rows(rows), cols(cols), data(rows * cols, 0.0)
 {
@@ -140,6 +142,26 @@ Matrix Matrix::operator+(const double scalar)
     return result;
 }
 
+void Matrix::randomize(const int min, const int max)
+{
+    std::default_random_engine eng;
+    std::uniform_real_distribution<double> distribution(min, max);
+    std::for_each(data.begin(), data.end(), [distribution, eng](double& elem) mutable
+    {
+        elem = distribution(eng);
+    });
+}
+
+void Matrix::xavierInit()
+{
+    const double fanIn = rows;
+    const double fanOut = cols;
+
+    const double sigma = std::sqrt(6.0/(fanIn+fanOut));
+    randomize(-sigma, +sigma);
+
+
+}
 
 std::ostream& operator<<(std::ostream& os, Matrix& matrix)
 {
