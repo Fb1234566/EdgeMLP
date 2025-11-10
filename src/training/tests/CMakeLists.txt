@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
 
-# Abilita Google Test
 include(FetchContent)
 FetchContent_Declare(
         googletest
@@ -8,10 +7,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-# Trova i file di test
 file(GLOB TEST_SOURCES "*.cpp")
 
-# Crea l'eseguibile dei test
 add_executable(tests ${TEST_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/Matrix.cpp
 )
