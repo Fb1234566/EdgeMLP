@@ -215,6 +215,7 @@ Matrix Matrix::map(const std::function<double(double)>& func) const
 {
     Matrix result(rows, cols);
     result = *this;
+    std::for_each(result.data.begin(), result.data.end(), func);
     return result;
 }
 

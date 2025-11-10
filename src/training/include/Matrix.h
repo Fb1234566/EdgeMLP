@@ -35,6 +35,7 @@ public:
     Matrix sumRows() const;
     Matrix map(const std::function<double(double)>& func) const;
     Matrix& operator=(const Matrix& m);
+    void
 };
 
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
