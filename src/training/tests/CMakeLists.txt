@@ -22,5 +22,6 @@ target_link_libraries(tests
         gtest_main
 )
 
-# Aggiungi i test a CTest
 include(GoogleTest)
+
+gtest_discover_tests(tests)
