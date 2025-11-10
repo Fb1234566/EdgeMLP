@@ -224,7 +224,6 @@ void Matrix::applyFunction(const std::function<double(double)>& func)
 
 }
 
-
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix)
 {
     os << "Matrix [" << matrix.getRows() << "x" << matrix.getCols() << "]:\n";
