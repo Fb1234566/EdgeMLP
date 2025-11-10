@@ -213,9 +213,8 @@ Matrix& Matrix::operator=(const Matrix& m)
 
 Matrix Matrix::map(const std::function<double(double)>& func) const
 {
-    Matrix result(rows, cols);
-    result = *this;
-    std::for_each(result.data.begin(), result.data.end(), func);
+    Matrix result(*this);
+    std::transform(result.data.begin(), result.data.end(), result.data.begin(), func);
     return result;
 }
 
