@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <functional>
 
 class Matrix
 {
@@ -13,6 +14,7 @@ private:
 public:
     Matrix(int rows, int cols);
     ~Matrix();
+    Matrix(const Matrix& m)=default;
     double& operator()(int row, int col);
     double operator()(int row, int col) const;
 
@@ -31,7 +33,9 @@ public:
     double sum() const;
     double mean() const;
     Matrix sumRows() const;
+    Matrix map(const std::function<double(double)>& func) const;
+    Matrix& operator=(const Matrix& m);
 };
 
-std::ostream& operator<<(std::ostream& os, Matrix& matrix);
+std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
 #endif //EDGEMLP_MATRIX_H

@@ -202,8 +202,23 @@ Matrix Matrix::sumRows() const
     return result;
 }
 
+Matrix& Matrix::operator=(const Matrix& m)
+{
+    Matrix tmp(m);
+    std::swap(rows, tmp.rows);
+    std::swap(cols, tmp.cols);
+    std::swap(data, tmp.data);
+    return *this;
+}
 
-std::ostream& operator<<(std::ostream& os, Matrix& matrix)
+Matrix Matrix::map(const std::function<double(double)>& func) const
+{
+    Matrix result(rows, cols);
+    result = *this;
+    return result;
+}
+
+std::ostream& operator<<(std::ostream& os, const Matrix& matrix)
 {
     os << "Matrix [" << matrix.getRows() << "x" << matrix.getCols() << "]:\n";
     for (int i = 0; i < matrix.getRows(); ++i)
