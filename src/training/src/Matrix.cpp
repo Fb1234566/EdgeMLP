@@ -187,6 +187,21 @@ double Matrix::mean() const
     return sum()/static_cast<double>(data.size());
 }
 
+Matrix Matrix::sumRows() const
+{
+    Matrix result(rows, 1);
+
+    for (int i = 0; i<rows; i++)
+    {
+        for (int j = 0; j<cols; j++)
+        {
+            result(i, 0) += (*this)(i, j);
+        }
+    }
+
+    return result;
+}
+
 
 std::ostream& operator<<(std::ostream& os, Matrix& matrix)
 {

@@ -30,6 +30,7 @@ public:
     void heInit();
     double sum() const;
     double mean() const;
+    Matrix sumRows() const;
 };
 
 std::ostream& operator<<(std::ostream& os, Matrix& matrix);
