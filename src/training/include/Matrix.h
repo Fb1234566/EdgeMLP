@@ -25,8 +25,9 @@ public:
     Matrix hadamardProduct(const Matrix& other);
     Matrix operator*(double scalar);
     Matrix operator+(double scalar);
-    void randomize(const int min, const int max);
+    void randomize(const double min, const double max);
     void xavierInit();
+    void heInit();
 };
 
 std::ostream& operator<<(std::ostream& os, Matrix& matrix);

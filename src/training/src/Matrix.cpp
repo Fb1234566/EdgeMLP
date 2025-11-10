@@ -132,7 +132,7 @@ Matrix Matrix::operator*(const double scalar)
 Matrix Matrix::operator+(const double scalar)
 {
     Matrix result(rows, cols);
-    for (int i = 0; i < rows; i++ )
+    for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
@@ -142,7 +142,7 @@ Matrix Matrix::operator+(const double scalar)
     return result;
 }
 
-void Matrix::randomize(const int min, const int max)
+void Matrix::randomize(const double min, const double max)
 {
     std::default_random_engine eng;
     std::uniform_real_distribution<double> distribution(min, max);
@@ -157,11 +157,25 @@ void Matrix::xavierInit()
     const double fanIn = rows;
     const double fanOut = cols;
 
-    const double sigma = std::sqrt(6.0/(fanIn+fanOut));
-    randomize(-sigma, +sigma);
-
-
+    const double sigma = std::sqrt(6.0 / (fanIn + fanOut));
+    randomize(-sigma, sigma);
 }
+
+void Matrix::heInit()
+{
+    const double fanIn = rows;
+    const double fanOut = cols;
+
+    const double stdDeviation = std::sqrt(2 / fanIn);
+
+    std::default_random_engine eng;
+    std::normal_distribution<double> distribution(0, stdDeviation);
+    std::for_each(data.begin(), data.end(), [distribution, eng](double& elem) mutable
+    {
+        elem = distribution(eng);
+    });
+}
+
 
 std::ostream& operator<<(std::ostream& os, Matrix& matrix)
 {
