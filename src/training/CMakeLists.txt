@@ -11,6 +11,8 @@ set(SOURCES
         src/main.cpp
         include/Matrix.h
         src/Matrix.cpp
+        src/activation_functions/Sigmoid.cpp
+        src/Activation.cpp
 )
 
 set(OMP_NUM_THREADS 8)
