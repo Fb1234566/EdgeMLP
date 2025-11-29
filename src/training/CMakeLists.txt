@@ -14,6 +14,7 @@ set(SOURCES
         src/activation_functions/Sigmoid.cpp
         src/Activation.cpp
         src/activation_functions/Relu.cpp
+        src/activation_functions/Tanh.cpp
 )
 
 set(OMP_NUM_THREADS 8)

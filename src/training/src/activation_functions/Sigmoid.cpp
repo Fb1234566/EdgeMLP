@@ -1,5 +1,5 @@
 #include "../../include/activation_functions/Sigmoid.h"
-#include <math.h>
+#include <cmath>
 
 double Sigmoid::activate(const double x)
 {
