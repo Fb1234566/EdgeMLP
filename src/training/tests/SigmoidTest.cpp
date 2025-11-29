@@ -3,13 +3,13 @@
 #include <limits>
 #include <vector>
 
-// Aggiorna il percorso se il tuo header è in un'altra cartella
+// Update the include path if your header is in a different folder
 #include "../include/activation_functions/Sigmoid.h"
 
 static constexpr double EPS = 1e-7;
 static constexpr double LARGE = 40.0;
 
-// Test: valori noti
+// Test: known values
 TEST(SigmoidTest, KnownValues) {
     Sigmoid s;
     double v0 = s.activate(0.0);
@@ -24,7 +24,7 @@ TEST(SigmoidTest, KnownValues) {
     ASSERT_NEAR(vn1, expected_n1, 1e-12);
 }
 
-// Test: limiti per input molto grande/negativo
+// Test: limits for very large / very negative inputs
 TEST(SigmoidTest, Limits) {
     Sigmoid s;
     double sbig = s.activate(LARGE);
@@ -36,7 +36,7 @@ TEST(SigmoidTest, Limits) {
     ASSERT_LT(sneg, 1e-12);
 }
 
-// Test: monotonicità crescente su alcuni punti
+// Test: monotonicity on several points
 TEST(SigmoidTest, Monotonicity) {
     Sigmoid s;
     std::vector<double> xs = {-3.0, -1.0, 0.0, 1.0, 3.0};
@@ -45,7 +45,7 @@ TEST(SigmoidTest, Monotonicity) {
     }
 }
 
-// Test: derivata analitica (usando derivative(x)) confrontata con s*(1-s)
+// Test: analytic derivative compared with s*(1-s)
 TEST(SigmoidTest, DerivativeMatchesFormula) {
     Sigmoid s;
     for (double x = -6.0; x <= 6.0; x += 0.5) {

@@ -13,6 +13,7 @@ set(SOURCES
         src/Matrix.cpp
         src/activation_functions/Sigmoid.cpp
         src/Activation.cpp
+        src/activation_functions/Relu.cpp
 )
 
 set(OMP_NUM_THREADS 8)
