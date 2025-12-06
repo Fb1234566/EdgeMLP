@@ -14,6 +14,7 @@ add_executable(tests ${TEST_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/activation_functions/Sigmoid.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/activation_functions/Relu.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/activation_functions/Tanh.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/activation_functions/Linear.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/Activation.cpp
 )
 
