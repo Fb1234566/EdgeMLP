@@ -1,6 +1,3 @@
-// Unit tests for the Relu activation function.
-// Tests cover known outputs, limits for large inputs, monotonicity and the derivative assumption.
-
 #include <gtest/gtest.h>
 #include <vector>
 #include "../include/activation_functions/Relu.h"
