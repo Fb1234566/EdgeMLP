@@ -21,7 +21,7 @@ public:
     int getRows() const;
     int getCols() const;
     const double* getData() const;
-    Matrix operator*(const Matrix& other);
+    Matrix operator*(const Matrix& other) const;
     Matrix operator+(const Matrix& other);
     Matrix transpose();
     Matrix hadamardProduct(const Matrix& other);

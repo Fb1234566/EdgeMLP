@@ -15,6 +15,7 @@ set(SOURCES
         src/Activation.cpp
         src/activation_functions/Relu.cpp
         src/activation_functions/Tanh.cpp
+        src/MLP.cpp
 )
 
 set(OMP_NUM_THREADS 8)
