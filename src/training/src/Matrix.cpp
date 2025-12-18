@@ -37,7 +37,7 @@ Matrix::~Matrix()
 {
 }
 
-Matrix Matrix::operator*(const Matrix& other)
+Matrix Matrix::operator*(const Matrix& other) const
 {
     if (cols != other.rows)
     {
