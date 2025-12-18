@@ -1,5 +1,10 @@
 #include <iostream>
 #include "Matrix.h"
+#include "MLP.h"
+#include "activation_functions/Sigmoid.h"
+#include "activation_functions/Linear.h"
+#include <vector>
+#include <memory>
 
 void printBanner() {
     std::cout << "\n";
@@ -31,5 +36,16 @@ void printBanner() {
 int main()
 {
     printBanner();
+
+    std::vector<int> layer_sizes = {2, 3, 1};
+    auto sigmoid = std::make_shared<Sigmoid>();
+    auto linear = std::make_shared<Linear>();
+    std::vector<std::shared_ptr<Activation>> activations = {sigmoid, linear};
+
+    MLP mlp(layer_sizes, activations);
+
+    std::cout << "MLP Architecture:" << std::endl;
+    std::cout << mlp << std::endl;
+
     return 0;
 }

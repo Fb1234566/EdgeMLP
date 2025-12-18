@@ -1,7 +1,7 @@
 #ifndef EDGEMLP_LINEAR_H
 #define EDGEMLP_LINEAR_H
 
-#include "Activation.h"
+#include "../Activation.h"
 
 class Linear: public Activation
 {

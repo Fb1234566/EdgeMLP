@@ -15,6 +15,7 @@ set(SOURCES
         src/Activation.cpp
         src/activation_functions/Relu.cpp
         src/activation_functions/Tanh.cpp
+        src/activation_functions/Linear.cpp
         src/MLP.cpp
 )
 
