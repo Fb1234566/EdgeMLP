@@ -12,7 +12,7 @@ class MLP
 public:
     MLP() = default;
     MLP(const std::vector<int>& sizes, const std::vector<std::shared_ptr<Activation>>& activations);
-    friend std::ostream& operator<<(std::ostream& os, const MLP m);
+    friend std::ostream& operator<<(std::ostream& os, const MLP& m);
     Matrix forward(const Matrix& input);
 
     std::vector<Matrix> weights;
@@ -25,5 +25,7 @@ private:
     std::vector<Matrix> a_values;
 };
 
-std::ostream& operator<<(std::ostream& os, const MLP m);
+std::ostream& operator<<(std::ostream& os, const MLP& m);
+
+
 #endif //EDGEMLP_MLP_H

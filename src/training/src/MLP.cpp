@@ -26,14 +26,14 @@ MLP::MLP(const std::vector<int>& sizes, const std::vector<std::shared_ptr<Activa
     }
 }
 
-std::ostream& operator<<(std::ostream& os, const MLP m)
+std::ostream& operator<<(std::ostream& os, const MLP& m)
 {
     for (size_t i = 0; i < m.layer_size.size(); ++i) {
-        std::cout << "  Layer " << i << ": " << m.layer_size[i] << " neurons";
+        os << "  Layer " << i << ": " << m.layer_size[i] << " neurons";
         if (i < m.layer_size.size() - 1) {
-            std::cout << ", Activation: " << m.activations[i]->name();
+            os << ", Activation: " << m.activations[i]->name();
         }
-        std::cout << std::endl;
+        os << std::endl;
     }
     return os;
 }
