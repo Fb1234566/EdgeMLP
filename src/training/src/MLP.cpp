@@ -14,8 +14,8 @@ MLP::MLP(const std::vector<int>& sizes, const std::vector<std::shared_ptr<Activa
 
     for (size_t i{}; i < sizes.size() - 1; i++)
     {
-        int n_in = sizes[i];
-        int n_out = sizes[i+1];
+        const int n_in = sizes[i];
+        const int n_out = sizes[i+1];
 
         Matrix w(n_out, n_in);
         w.heInit(); // He initialization
