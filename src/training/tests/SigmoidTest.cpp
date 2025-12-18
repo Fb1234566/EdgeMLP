@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include <cmath>
-#include <limits>
 #include <vector>
 
 // Update the include path if your header is in a different folder
+#include "../include/Matrix.h"
 #include "../include/activation_functions/Sigmoid.h"
 
 static constexpr double EPS = 1e-7;
@@ -53,5 +53,60 @@ TEST(SigmoidTest, DerivativeMatchesFormula) {
         double expected = out * (1.0 - out);
         double d = s.derivative(x);
         ASSERT_NEAR(d, expected, 1e-6) << "Derivative mismatch at x=" << x;
+    }
+}
+
+// Test: forward pass with a matrix
+TEST(SigmoidTest, ForwardPass) {
+    Sigmoid s;
+    Matrix m(2, 2);
+    m(0, 0) = 0.0;
+    m(0, 1) = 1.0;
+    m(1, 0) = -1.0;
+    m(1, 1) = 2.0;
+
+    Matrix result = s.forward(m);
+
+    Matrix expected(2, 2);
+    expected(0, 0) = s.activate(0.0);
+    expected(0, 1) = s.activate(1.0);
+    expected(1, 0) = s.activate(-1.0);
+    expected(1, 1) = s.activate(2.0);
+
+    for (size_t i = 0; i < m.getRows(); ++i) {
+        for (size_t j = 0; j < m.getCols(); ++j) {
+            ASSERT_NEAR(result(i, j), expected(i, j), EPS);
+        }
+    }
+}
+
+// Test: backward pass with a matrix
+TEST(SigmoidTest, BackwardPass) {
+    Sigmoid s;
+    Matrix upstreamGradient(2, 2);
+    upstreamGradient(0, 0) = 0.5;
+    upstreamGradient(0, 1) = 1.5;
+    upstreamGradient(1, 0) = 2.5;
+    upstreamGradient(1, 1) = 3.5;
+
+    // Pass INPUT values, not outputs
+    Matrix activationInput(2, 2);
+    activationInput(0, 0) = 0.0;
+    activationInput(0, 1) = 1.0;
+    activationInput(1, 0) = -2.0;
+    activationInput(1, 1) = 3.0;
+
+    Matrix result = s.backward(upstreamGradient, activationInput);
+
+    Matrix expected(2, 2);
+    expected(0, 0) = upstreamGradient(0, 0) * s.derivative(activationInput(0, 0));
+    expected(0, 1) = upstreamGradient(0, 1) * s.derivative(activationInput(0, 1));
+    expected(1, 0) = upstreamGradient(1, 0) * s.derivative(activationInput(1, 0));
+    expected(1, 1) = upstreamGradient(1, 1) * s.derivative(activationInput(1, 1));
+
+    for (size_t i = 0; i < result.getRows(); ++i) {
+        for (size_t j = 0; j < result.getCols(); ++j) {
+            ASSERT_NEAR(result(i, j), expected(i, j), EPS);
+        }
     }
 }
