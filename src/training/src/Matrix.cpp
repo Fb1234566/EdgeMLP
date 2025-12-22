@@ -102,6 +102,14 @@ Matrix Matrix::transpose()
 
 Matrix Matrix::hadamardProduct(const Matrix& other)
 {
+    if (rows != other.rows || cols != other.cols)
+    {
+        throw std::invalid_argument(
+            "Cannot perform Hadamard product on matrices with incompatible dimensions " +
+            std::to_string(rows) + "x" + std::to_string(cols) + " and " +
+            std::to_string(other.rows) + "x" + std::to_string(other.cols));
+    }
+
     Matrix result(rows, other.cols);
 
     for (int i = 0; i < rows; i++)
@@ -240,4 +248,35 @@ std::ostream& operator<<(std::ostream& os, const Matrix& matrix)
     }
     os << std::endl;
     return os;
+}
+
+Matrix Matrix::operator-(const Matrix& other)
+{
+    if (rows != other.rows || cols != other.cols)
+    {
+        throw std::invalid_argument(
+            "Cannot add matrices with incompatible dimensions" + std::to_string(cols) + " and " + std::to_string(
+                other.rows));
+    }
+
+    Matrix result(rows, cols);
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            result(i, j) = (*this)(i, j) - other(i, j);
+        }
+    }
+
+    return result;
+}
+
+Matrix Matrix::operator-(const Matrix& other) const
+{
+    Matrix result(rows, cols);
+    Matrix nonConstCopy(*this);
+    result = nonConstCopy - other;
+
+    return result;
 }
