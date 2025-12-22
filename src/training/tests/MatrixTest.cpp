@@ -762,3 +762,47 @@ TEST(MatrixEdgeCaseTest, DoubleTranspose)
     EXPECT_DOUBLE_EQ(result(1, 1), 5.0);
     EXPECT_DOUBLE_EQ(result(1, 2), 6.0);
 }
+
+// Test for matrix subtraction
+TEST(MatrixTest, MatrixSubtraction)
+{
+    Matrix m1(2, 2);
+    m1(0, 0) = 5.0; m1(0, 1) = 6.0;
+    m1(1, 0) = 7.0; m1(1, 1) = 8.0;
+
+    Matrix m2(2, 2);
+    m2(0, 0) = 1.0; m2(0, 1) = 2.0;
+    m2(1, 0) = 3.0; m2(1, 1) = 4.0;
+
+    Matrix result = m1 - m2;
+
+    EXPECT_EQ(result.getRows(), 2);
+    EXPECT_EQ(result.getCols(), 2);
+    EXPECT_DOUBLE_EQ(result(0, 0), 4.0);
+    EXPECT_DOUBLE_EQ(result(0, 1), 4.0);
+    EXPECT_DOUBLE_EQ(result(1, 0), 4.0);
+    EXPECT_DOUBLE_EQ(result(1, 1), 4.0);
+}
+
+// Test for matrix subtraction with incompatible dimensions
+TEST(MatrixTest, MatrixSubtractionIncompatible)
+{
+    Matrix m1(2, 2);
+    Matrix m2(2, 3);
+
+    EXPECT_THROW(m1 - m2, std::invalid_argument);
+}
+
+// Test subtracting a matrix from itself (should result in a zero matrix)
+TEST(MatrixEdgeCaseTest, SubtractionFromSelf)
+{
+    Matrix m(2, 2);
+    m(0, 0) = 1.0; m(0, 1) = 2.0;
+    m(1, 0) = 3.0; m(1, 1) = 4.0;
+
+    Matrix result = m - m;
+
+    EXPECT_DOUBLE_EQ(result.sum(), 0.0);
+    EXPECT_DOUBLE_EQ(result(0, 0), 0.0);
+    EXPECT_DOUBLE_EQ(result(1, 1), 0.0);
+}
