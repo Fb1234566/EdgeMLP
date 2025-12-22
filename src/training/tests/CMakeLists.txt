@@ -6,8 +6,8 @@ enable_testing()
 include(FetchContent)
 FetchContent_Declare(
         googletest
-        URL https://github.com/google/googletest/archive/52eb8108c5bdec04579160ae17225d66034bd723.zip
-)
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.17.0)
 FetchContent_MakeAvailable(googletest)
 
 file(GLOB TEST_SOURCES "*.cpp")
