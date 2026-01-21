@@ -95,3 +95,71 @@ TEST(MLPTest, ForwardPassSimple) {
     EXPECT_NEAR(output(0, 0), 1.55, 1e-9);
 }
 
+TEST(MLPTest, BackwardPassSimpleLinear) {
+    std::vector<int> layer_sizes = {2, 2, 1};
+    auto linear = std::make_shared<Linear>();
+    std::vector<std::shared_ptr<Activation>> activations = {linear, linear};
+    MLP mlp(layer_sizes, activations);
+
+    // Imposta pesi e bias noti
+    auto& weights = mlp.weights;
+    auto& biases = mlp.biases;
+    weights[0](0, 0) = 0.1; weights[0](0, 1) = 0.2;
+    weights[0](1, 0) = 0.3; weights[0](1, 1) = 0.4;
+    biases[0](0, 0) = 0.1; biases[0](1, 0) = 0.2;
+    weights[1](0, 0) = 0.5; weights[1](0, 1) = 0.6;
+    biases[1](0, 0) = -0.1;
+
+    // Input e output target
+    Matrix input(2, 1);
+    input(0, 0) = 2.0;
+    input(1, 0) = 3.0;
+    Matrix target(1, 1);
+    target(0, 0) = 2.0;
+
+    // Salva i valori originali
+    double w1_before = weights[0](0, 0);
+    double b2_before = biases[1](0, 0);
+
+    // Esegui retropropagazione
+    mlp.backpropagate(input, target);
+
+    // Dopo la retropropagazione, i pesi e bias devono essere cambiati
+    EXPECT_NE(weights[0](0, 0), w1_before);
+    EXPECT_NE(biases[1](0, 0), b2_before);
+}
+
+// Test la retropropagazione con attivazione sigmoid
+TEST(MLPTest, BackwardPassSimpleSigmoid) {
+    std::vector<int> layer_sizes = {2, 2, 1};
+    auto sigmoid = std::make_shared<Sigmoid>();
+    std::vector<std::shared_ptr<Activation>> activations = {sigmoid, sigmoid};
+    MLP mlp(layer_sizes, activations);
+
+    // Inizializza pesi e bias
+    auto& weights = mlp.weights;
+    auto& biases = mlp.biases;
+    weights[0](0, 0) = 0.2; weights[0](0, 1) = -0.3;
+    weights[0](1, 0) = 0.4; weights[0](1, 1) = 0.1;
+    biases[0](0, 0) = 0.0; biases[0](1, 0) = 0.0;
+    weights[1](0, 0) = -0.5; weights[1](0, 1) = 0.2;
+    biases[1](0, 0) = 0.1;
+
+    // Input e output target
+    Matrix input(2, 1);
+    input(0, 0) = 0.5;
+    input(1, 0) = -1.5;
+    Matrix target(1, 1);
+    target(0, 0) = 0.7;
+
+    // Salva i valori originali
+    double w2_before = weights[1](0, 0);
+    double b1_before = biases[0](0, 0);
+
+    // Esegui retropropagazione
+    mlp.backpropagate(input, target);
+
+    // Dopo la retropropagazione, i pesi e bias devono essere cambiati
+    EXPECT_NE(weights[1](0, 0), w2_before);
+    EXPECT_NE(biases[0](0, 0), b1_before);
+}

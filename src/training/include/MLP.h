@@ -10,13 +10,14 @@
 class MLP
 {
 public:
+    double learning_rate = 0.01;
     MLP() = default;
     MLP(const std::vector<int>& sizes, const std::vector<std::shared_ptr<Activation>>& activations);
     friend std::ostream& operator<<(std::ostream& os, const MLP& m);
     Matrix forward(const Matrix& input);
-
     std::vector<Matrix> weights;
     std::vector<Matrix> biases;
+    void backpropagate(const Matrix& input, const Matrix& output);
 
 private:
     std::vector<int> layer_size;

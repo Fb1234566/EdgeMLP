@@ -67,4 +67,32 @@ Matrix MLP::forward(const Matrix& input)
     return current_a;
 }
 
+void MLP::backpropagate(const Matrix& input, const Matrix& output)
+{
+    forward(input);
+
+    std::vector<Matrix> nabla_b, nabla_w;
+    for (const auto& b : biases) nabla_b.emplace_back(b.getRows(), b.getCols());
+    for (const auto& w : weights) nabla_w.emplace_back(w.getRows(), w.getCols());
+
+    // 1. Compute delta output
+    Matrix delta = a_values.back() - output;
+    delta = activations.back()->backward(delta, z_values.back());
+    nabla_b.back() = delta;
+    nabla_w.back() = delta * a_values[a_values.size() - 2].transpose();
+
+    // 2. Propagation in the hidden layers
+    for (int l = static_cast<int>(weights.size()) - 2; l >= 0; --l) {
+        Matrix wT_delta = weights[l + 1].transpose() * delta;
+        delta = activations[l]->backward(wT_delta, z_values[l]);
+        nabla_b[l] = delta;
+        nabla_w[l] = delta * a_values[l].transpose();
+    }
+
+    // 3. Update parameters
+    for (size_t i = 0; i < weights.size(); ++i) {
+        weights[i] = weights[i] - nabla_w[i] * learning_rate;
+        biases[i] = biases[i] - nabla_b[i] * learning_rate;
+    }
+}
 
