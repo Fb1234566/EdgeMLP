@@ -1,6 +1,6 @@
 #include "../include/MLP.h"
 
-MLP::MLP(const std::vector<int>& sizes, const std::vector<std::shared_ptr<Activation>>& activation_funcs) : layer_size(sizes), activations(activation_funcs)
+MLP::MLP(const std::vector<int>& sizes, const std::vector<std::shared_ptr<Activation>>& activation_funcs, double learning_rate) : layer_size(sizes), activations(activation_funcs), learning_rate(learning_rate)
 {
     if (sizes.size() < 2)
     {

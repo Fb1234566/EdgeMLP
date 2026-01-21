@@ -12,7 +12,7 @@ TEST(MLPTest, ConstructorAndArchitecture) {
     auto sigmoid = std::make_shared<Sigmoid>();
     std::vector<std::shared_ptr<Activation>> activations = {sigmoid, sigmoid};
 
-    MLP mlp(layer_sizes, activations);
+    MLP mlp(layer_sizes, activations, 0.01);
 
     // Check architecture
     const auto& weights = mlp.weights;
@@ -49,7 +49,7 @@ TEST(MLPTest, ForwardPassSimple) {
     auto linear = std::make_shared<Linear>();
     std::vector<std::shared_ptr<Activation>> activations = {linear, linear};
 
-    MLP mlp(layer_sizes, activations);
+    MLP mlp(layer_sizes, activations, 0.01);
 
     // Manually set weights and biases for predictable output
     auto& weights = mlp.weights;
@@ -99,7 +99,7 @@ TEST(MLPTest, BackwardPassSimpleLinear) {
     std::vector<int> layer_sizes = {2, 2, 1};
     auto linear = std::make_shared<Linear>();
     std::vector<std::shared_ptr<Activation>> activations = {linear, linear};
-    MLP mlp(layer_sizes, activations);
+    MLP mlp(layer_sizes, activations, 0.01);
 
     // Imposta pesi e bias noti
     auto& weights = mlp.weights;
@@ -134,7 +134,7 @@ TEST(MLPTest, BackwardPassSimpleSigmoid) {
     std::vector<int> layer_sizes = {2, 2, 1};
     auto sigmoid = std::make_shared<Sigmoid>();
     std::vector<std::shared_ptr<Activation>> activations = {sigmoid, sigmoid};
-    MLP mlp(layer_sizes, activations);
+    MLP mlp(layer_sizes, activations, 0.01);
 
     // Inizializza pesi e bias
     auto& weights = mlp.weights;
