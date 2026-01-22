@@ -4,6 +4,7 @@
 #include "../include/activation_functions/Sigmoid.h"
 #include "../include/activation_functions/Linear.h"
 #include <vector>
+#include <cmath>
 #include <memory>
 
 // Test to verify MLP construction and architecture
@@ -162,4 +163,93 @@ TEST(MLPTest, BackwardPassSimpleSigmoid) {
     // Dopo la retropropagazione, i pesi e bias devono essere cambiati
     EXPECT_NE(weights[1](0, 0), w2_before);
     EXPECT_NE(biases[0](0, 0), b1_before);
+}
+
+// Helper to create a standard Sigmoid MLP for testing
+std::unique_ptr<MLP> createXORNet(double learning_rate = 0.5) {
+    std::vector<int> layer_sizes = {2, 4, 1}; // 2 Inputs, 4 Hidden, 1 Output
+    auto sigmoid = std::make_shared<Sigmoid>();
+    std::vector<std::shared_ptr<Activation>> activations = {sigmoid, sigmoid};
+    return std::make_unique<MLP>(layer_sizes, activations, learning_rate);
+}
+
+// Test on XOR problem (Classic test) & Verify network learns correct outputs
+TEST(MLPTest, XORConvergenceTest) {
+    std::vector<int> layer_sizes = {2, 4, 1};
+    auto sigmoid = std::make_shared<Sigmoid>();
+    MLP mlp(layer_sizes, {sigmoid, sigmoid}, 0.5);
+
+    // Data defined as individual column vectors
+    std::vector<Matrix> inputs(4, Matrix(2, 1));
+    std::vector<Matrix> targets(4, Matrix(1, 1));
+
+    // 0 XOR 0 = 0
+    inputs[0](0,0)=0; inputs[0](1,0)=0; targets[0](0,0)=0;
+    // 0 XOR 1 = 1
+    inputs[1](0,0)=0; inputs[1](1,0)=1; targets[1](0,0)=1;
+    // 1 XOR 0 = 1
+    inputs[2](0,0)=1; inputs[2](1,0)=0; targets[2](0,0)=1;
+    // 1 XOR 1 = 0
+    inputs[3](0,0)=1; inputs[3](1,0)=1; targets[3](0,0)=0;
+
+    // Manual training loop since mlp.train() might expect a batch
+    for (int epoch = 0; epoch < 5000; ++epoch) {
+        for (int i = 0; i < 4; ++i) {
+            mlp.backpropagate(inputs[i], targets[i]);
+        }
+    }
+
+    // Verify correct outputs
+    for (int i = 0; i < 4; ++i) {
+        Matrix output = mlp.forward(inputs[i]);
+        EXPECT_NEAR(output(0, 0), targets[i](0, 0), 0.1);
+    }
+}
+
+// Verify loss decreases over time
+TEST(MLPTest, LossDecreasesOverTime) {
+    std::vector<int> layer_sizes = {2, 2, 1};
+    auto sigmoid = std::make_shared<Sigmoid>();
+    MLP mlp(layer_sizes, {sigmoid, sigmoid}, 0.1);
+
+    Matrix input(2, 1);
+    input(0,0) = 0.5; input(1,0) = 0.5;
+    Matrix target(1, 1);
+    target(0,0) = 1.0;
+
+    // Initial Error
+    double initial_out = mlp.forward(input)(0, 0);
+    double initial_loss = std::pow(initial_out - target(0, 0), 2);
+
+    // Train on this single sample multiple times
+    for(int i = 0; i < 50; ++i) {
+        mlp.backpropagate(input, target);
+    }
+
+    // Final Error
+    double final_out = mlp.forward(input)(0, 0);
+    double final_loss = std::pow(final_out - target(0, 0), 2);
+
+    EXPECT_LT(final_loss, initial_loss);
+}
+// Test overfitting on small dataset
+// This verifies that given enough capacity, the net can "memorize" a small set perfectly
+TEST(MLPTest, OverfitSmallDataset) {
+    std::vector<int> layer_sizes = {2, 8, 1}; // Higher capacity
+    auto sigmoid = std::make_shared<Sigmoid>();
+    MLP mlp(layer_sizes, {sigmoid, sigmoid}, 0.5);
+
+    Matrix input(2, 1);
+    input(0,0) = 0.123; input(1,0) = 0.456;
+    Matrix target(1, 1);
+    target(0,0) = 0.888;
+
+    // Intense training on one specific point
+    for(int i = 0; i < 2000; ++i) {
+        mlp.backpropagate(input, target);
+    }
+
+    Matrix out = mlp.forward(input);
+    // Overfit should result in high precision
+    EXPECT_NEAR(out(0, 0), 0.888, 0.01);
 }
