@@ -96,3 +96,38 @@ void MLP::backpropagate(const Matrix& input, const Matrix& output)
     }
 }
 
+void MLP::train(const Matrix& X, const Matrix& y, const int epochs, const double lr)
+{
+    if (X.getCols() != y.getCols()) {
+        throw std::invalid_argument("Il numero di esempi in X e y deve essere uguale.");
+    }
+    if (X.getRows() != layer_size[0]) {
+        throw std::invalid_argument("Le dimensioni di X non corrispondono allo strato di input.");
+    }
+    if (y.getRows() != layer_size.back()) {
+        throw std::invalid_argument("Le dimensioni di y non corrispondono allo strato di output.");
+    }
+
+    if (lr > 0) {
+        learning_rate = lr;
+    }
+    bool printStatus = true;
+    for (int epoch = 0; epoch < epochs; ++epoch) {
+        if (epoch%100 == 0)
+        {
+            printf("---Epoch %d\n---", epoch);
+            printStatus = true;
+
+        }
+        for (int i = 0; i < X.getCols(); ++i) {
+            Matrix x_i = X.col(i);
+            Matrix y_i = y.col(i);
+            backpropagate(x_i, y_i);
+        }
+        if (printStatus)
+        {
+            printf("done Epoch %d\n", epoch);
+        }
+        printStatus = false;
+    }
+}

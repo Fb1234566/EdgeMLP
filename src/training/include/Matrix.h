@@ -38,6 +38,7 @@ public:
     void applyFunction(const std::function<double(double)>& func);
     Matrix operator-(const Matrix& other);
     Matrix operator-(const Matrix& other) const;
+    Matrix col(const int idx) const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
