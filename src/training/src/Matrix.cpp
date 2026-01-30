@@ -88,7 +88,7 @@ Matrix Matrix::operator+(const Matrix& other)
 Matrix Matrix::transpose()
 {
     Matrix result(cols, rows);
-
+#pragma omp for collapse(2)
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
@@ -112,6 +112,7 @@ Matrix Matrix::hadamardProduct(const Matrix& other)
 
     Matrix result(rows, other.cols);
 
+#pragma omp for collapse(2)
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < other.cols; j++)
@@ -192,16 +193,16 @@ double Matrix::mean() const
 {
     if (data.empty())
         return 0.0;
-    return sum()/static_cast<double>(data.size());
+    return sum() / static_cast<double>(data.size());
 }
 
 Matrix Matrix::sumRows() const
 {
     Matrix result(rows, 1);
 
-    for (int i = 0; i<rows; i++)
+    for (int i = 0; i < rows; i++)
     {
-        for (int j = 0; j<cols; j++)
+        for (int j = 0; j < cols; j++)
         {
             result(i, 0) += (*this)(i, j);
         }
@@ -229,7 +230,6 @@ Matrix Matrix::map(const std::function<double(double)>& func) const
 void Matrix::applyFunction(const std::function<double(double)>& func)
 {
     std::transform(data.begin(), data.end(), data.begin(), func);
-
 }
 
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix)
@@ -278,5 +278,19 @@ Matrix Matrix::operator-(const Matrix& other) const
     Matrix nonConstCopy(*this);
     result = nonConstCopy - other;
 
+    return result;
+}
+
+Matrix Matrix::col(const int idx) const
+{
+    if (idx < 0 || idx >= cols)
+    {
+        throw std::out_of_range("Column index out of range");
+    }
+    Matrix result(rows, 1);
+    for (int i = 0; i < rows; ++i)
+    {
+        result(i, 0) = (*this)(i, idx);
+    }
     return result;
 }
