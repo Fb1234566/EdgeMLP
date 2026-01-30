@@ -1,13 +1,13 @@
 #include "../include/MLP.h"
 
-MLP::MLP(const std::vector<int>& sizes, const std::vector<std::shared_ptr<Activation>>& activation_funcs, double learning_rate) : layer_size(sizes), activations(activation_funcs), learning_rate(learning_rate)
+MLP::MLP(const std::vector<int>& sizes, const std::vector<std::shared_ptr<Activation>>& activations, const double learning_rate, const std::shared_ptr<Loss>& loss) : learning_rate(learning_rate), loss_function(loss), layer_size(sizes), activations(activations)
 {
     if (sizes.size() < 2)
     {
         throw std::invalid_argument("MLP must have at least 2 layers");
     }
 
-    if  (sizes.size() - 1 != activation_funcs.size())
+    if  (sizes.size() - 1 != activations.size())
     {
         throw std::invalid_argument("The number of activation functions must be equal to the number of layers minus one");
     }
@@ -76,8 +76,8 @@ void MLP::backpropagate(const Matrix& input, const Matrix& output)
     for (const auto& w : weights) nabla_w.emplace_back(w.getRows(), w.getCols());
 
     // 1. Compute delta output
-    Matrix delta = a_values.back() - output;
-    delta = activations.back()->backward(delta, z_values.back());
+    const Matrix cost_deriv = loss_function->derivative(a_values.back(), output);
+    Matrix delta = activations.back()->backward(cost_deriv, z_values.back());
     nabla_b.back() = delta;
     nabla_w.back() = delta * a_values[a_values.size() - 2].transpose();
 

@@ -7,13 +7,15 @@
 #include <cmath>
 #include <memory>
 
+#include "loss_functions/MSE.h"
+
 // Test to verify MLP construction and architecture
 TEST(MLPTest, ConstructorAndArchitecture) {
     std::vector<int> layer_sizes = {2, 3, 1};
     auto sigmoid = std::make_shared<Sigmoid>();
     std::vector<std::shared_ptr<Activation>> activations = {sigmoid, sigmoid};
-
-    MLP mlp(layer_sizes, activations, 0.01);
+    auto mse = std::make_shared<MSE>();
+    MLP mlp(layer_sizes, activations, 0.01, mse);
 
     // Check architecture
     const auto& weights = mlp.weights;
@@ -49,8 +51,8 @@ TEST(MLPTest, ForwardPassSimple) {
     // Use Linear activation for simplicity to check calculations
     auto linear = std::make_shared<Linear>();
     std::vector<std::shared_ptr<Activation>> activations = {linear, linear};
-
-    MLP mlp(layer_sizes, activations, 0.01);
+    auto mse = std::make_shared<MSE>();
+    MLP mlp(layer_sizes, activations, 0.01, mse);
 
     // Manually set weights and biases for predictable output
     auto& weights = mlp.weights;
@@ -100,7 +102,8 @@ TEST(MLPTest, BackwardPassSimpleLinear) {
     std::vector<int> layer_sizes = {2, 2, 1};
     auto linear = std::make_shared<Linear>();
     std::vector<std::shared_ptr<Activation>> activations = {linear, linear};
-    MLP mlp(layer_sizes, activations, 0.01);
+    auto mse = std::make_shared<MSE>();
+    MLP mlp(layer_sizes, activations, 0.01, mse);
 
     // Imposta pesi e bias noti
     auto& weights = mlp.weights;
@@ -135,7 +138,8 @@ TEST(MLPTest, BackwardPassSimpleSigmoid) {
     std::vector<int> layer_sizes = {2, 2, 1};
     auto sigmoid = std::make_shared<Sigmoid>();
     std::vector<std::shared_ptr<Activation>> activations = {sigmoid, sigmoid};
-    MLP mlp(layer_sizes, activations, 0.01);
+    auto mse = std::make_shared<MSE>();
+    MLP mlp(layer_sizes, activations, 0.01, mse);
 
     // Inizializza pesi e bias
     auto& weights = mlp.weights;
@@ -170,14 +174,16 @@ std::unique_ptr<MLP> createXORNet(double learning_rate = 0.5) {
     std::vector<int> layer_sizes = {2, 4, 1}; // 2 Inputs, 4 Hidden, 1 Output
     auto sigmoid = std::make_shared<Sigmoid>();
     std::vector<std::shared_ptr<Activation>> activations = {sigmoid, sigmoid};
-    return std::make_unique<MLP>(layer_sizes, activations, learning_rate);
+    auto mse = std::make_shared<MSE>();
+    return std::make_unique<MLP>(layer_sizes, activations, learning_rate, mse);
 }
 
 // Test on XOR problem (Classic test) & Verify network learns correct outputs
 TEST(MLPTest, XORConvergenceTest) {
     std::vector<int> layer_sizes = {2, 4, 1};
     auto sigmoid = std::make_shared<Sigmoid>();
-    MLP mlp(layer_sizes, {sigmoid, sigmoid}, 0.5);
+    auto mse = std::make_shared<MSE>();
+    MLP mlp(layer_sizes, {sigmoid, sigmoid}, 0.5, mse);
 
     // Data defined as individual column vectors
     std::vector<Matrix> inputs(4, Matrix(2, 1));
@@ -210,7 +216,8 @@ TEST(MLPTest, XORConvergenceTest) {
 TEST(MLPTest, LossDecreasesOverTime) {
     std::vector<int> layer_sizes = {2, 2, 1};
     auto sigmoid = std::make_shared<Sigmoid>();
-    MLP mlp(layer_sizes, {sigmoid, sigmoid}, 0.1);
+    auto mse = std::make_shared<MSE>();
+    MLP mlp(layer_sizes, {sigmoid, sigmoid}, 0.1, mse);
 
     Matrix input(2, 1);
     input(0,0) = 0.5; input(1,0) = 0.5;
@@ -237,7 +244,8 @@ TEST(MLPTest, LossDecreasesOverTime) {
 TEST(MLPTest, OverfitSmallDataset) {
     std::vector<int> layer_sizes = {2, 8, 1}; // Higher capacity
     auto sigmoid = std::make_shared<Sigmoid>();
-    MLP mlp(layer_sizes, {sigmoid, sigmoid}, 0.5);
+    auto mse = std::make_shared<MSE>();
+    MLP mlp(layer_sizes, {sigmoid, sigmoid}, 0.5, mse);
 
     Matrix input(2, 1);
     input(0,0) = 0.123; input(1,0) = 0.456;
