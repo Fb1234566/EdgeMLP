@@ -21,6 +21,7 @@ add_executable(tests ${TEST_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/activation_functions/Linear.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/Activation.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/loss_functions/MSE.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/Statistics.cpp
 )
 
 target_include_directories(tests PRIVATE
