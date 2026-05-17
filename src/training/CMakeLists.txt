@@ -17,6 +17,7 @@ set(SOURCES
         src/activation_functions/Linear.cpp
         src/MLP.cpp
         src/loss_functions/MSE.cpp
+        src/Statistics.cpp
 )
 
 set(OMP_NUM_THREADS 8)

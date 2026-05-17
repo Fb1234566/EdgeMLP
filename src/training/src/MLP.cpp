@@ -1,5 +1,7 @@
 #include "../include/MLP.h"
 
+#include <cmath>
+
 MLP::MLP(const std::vector<int>& sizes, const std::vector<std::shared_ptr<Activation>>& activations, const double learning_rate, const std::shared_ptr<Loss>& loss) : learning_rate(learning_rate), loss_function(loss), layer_size(sizes), activations(activations)
 {
     if (sizes.size() < 2)
@@ -18,7 +20,7 @@ MLP::MLP(const std::vector<int>& sizes, const std::vector<std::shared_ptr<Activa
         const int n_out = sizes[i+1];
 
         Matrix w(n_out, n_in);
-        w.heInit(); // He initialization
+        w.xavierInit(); // He initialization
         weights.push_back(w);
 
         Matrix b(n_out, 1);
@@ -113,7 +115,7 @@ void MLP::train(const Matrix& X, const Matrix& y, const int epochs, const double
     }
     bool printStatus = true;
     for (int epoch = 0; epoch < epochs; ++epoch) {
-        if (epoch%100 == 0)
+        if (epoch%1 == 0)
         {
             printf("---Epoch %d\n---", epoch);
             printStatus = true;
@@ -124,9 +126,24 @@ void MLP::train(const Matrix& X, const Matrix& y, const int epochs, const double
             Matrix y_i = y.col(i);
             backpropagate(x_i, y_i);
         }
+        double epoch_loss = 0.0;
+        for (int i = 0; i < X.getCols(); ++i) {
+            Matrix x_i = X.col(i);
+            Matrix y_i = y.col(i);
+            Matrix y_pred = forward(x_i);
+            double loss = loss_function->calculate(y_pred, y_i);
+            if (std::isnan(loss)) {
+                std::cout << "Loss is nan at example " << i << std::endl;
+                // Stampa y_pred, y_i, ecc.
+            }
+            epoch_loss += loss;
+        }
+        epoch_loss /= X.getCols();
+        statistics("loss", epoch_loss);
         if (printStatus)
         {
             printf("done Epoch %d\n", epoch);
+            std::cout << statistics << std::endl;
         }
         printStatus = false;
     }

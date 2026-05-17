@@ -7,10 +7,12 @@
 #include "Activation.h"
 #include "Loss.h"
 #include "Matrix.h"
+#include "Statistics.h"
 
 class MLP
 {
 public:
+    TrainingStatics statistics;
     double learning_rate{};
     std::shared_ptr<Loss> loss_function{};
     MLP() = default;
